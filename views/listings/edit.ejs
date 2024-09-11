@@ -1,0 +1,44 @@
+<% layout("/layouts/boilerPlate.ejs") -%>
+<body>
+    <div class="row  mt-3">
+        <div class="col-8 offset-2">
+            <h3>Edit Your Listings</h3>
+    <form method="POST", action="/listings/<%= listItem._id %>?_method=PUT" >
+        <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input class="form-control" type="text" name="title" value="<%= listItem.title %>">
+        </div>
+       
+        <div class="mb-3">
+            <label for="description" class="form-label">Title</label>
+            <textarea class="form-control" name="description" ><%= listItem.description %></textarea>
+        </div>
+        
+        <div class="mb-3">
+            <label for="image" class="form-label">Title</label>
+            <input class="form-control" type="text" name="image" value="<%= listItem.image %>">
+        </div>
+
+        <div class="row">
+            <div class="mb-3 col-md-4">
+                <label for="price" class="form-label">Title</label>
+                <input class="form-control" type="number" name="price" value="<%= listItem.price %>">
+            </div>
+            <div class="mb-3 col-md-8">
+                <label for="country" class="form-label">Title</label>
+                <input class="form-control" type="text" name="country" value="<%= listItem.country %>">
+            </div>
+        </div>
+
+        <div>
+            <label for="location" class="form-label">Title</label>
+            <input class="form-control" type="text" name="location" value="<%= listItem.location %>">
+        </div>
+
+        
+        <br>
+        <button class="btn btn-dark edit-btn mt-3">Submit</button>
+    </form>
+        </div>
+    </div>
+</body>
