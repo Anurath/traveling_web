@@ -8,8 +8,8 @@ const listingSchema = new mongoose.Schema({
     description: String,
     image: {
         type: String,
-        default:"https://unsplash.com/photos/a-beach-with-boats-and-people-tnatdes93Aw",
-        set: (v) => v === "" ? "https://unsplash.com/photos/a-beach-with-boats-and-people-tnatdes93Aw" : v,
+        default:"https://images.unsplash.com/photo-1662065475245-e4ff6db6f62c?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        set: (v) => v === "" ? "https://images.unsplash.com/photo-1662065475245-e4ff6db6f62c?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" : v,
     },
     price:Number,
     location:String,
