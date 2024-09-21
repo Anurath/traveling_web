@@ -5,6 +5,7 @@ const path=require("path");
 const methodOverride=require("method-override");
 const ejsMate=require("ejs-mate");
 const ExpressError=require("./utils/ExpressError");
+const Review=require("./models/reviews.js");
 
 app.set("view engine","ejs");
 app.set("views",path.join(__dirname,"views"));

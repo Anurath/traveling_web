@@ -2,13 +2,13 @@
 <body>
     <div class="main-container">
       <div class="show offset-2">
-         <h3>Listing Details:</h3>
+        <b><%= listItem.title %></b>
    
        <div class="card" style="width: 20rem;">
          <img src="<%= listItem.image %>" class="card-img-top" alt="ListingImage">
          <div class="card-body">
          </div>
-         <b><%= listItem.title %></b>
+         
          <br>
          <%= listItem.description %>
          <br>
@@ -27,5 +27,17 @@
           </form>
        </div>
        </div>
+    </div>
+    <div class="col-8 offset-3 mt-3">
+      <h4>Leave a Review</h4>
+      <form action="">
+        <div>
+          <label for="rating">Rating</label>
+          <input type="range" min="1" max="5" name="review[rating]">
+        </div>
+        <label for="comment">Comment</label>
+        <textarea cols="30" rows="5" name="review[comment]" id="comment"></textarea>
+        <button>Submit</button>
+      </form>
     </div>
 </body>
