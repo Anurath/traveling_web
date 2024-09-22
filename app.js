@@ -143,9 +143,26 @@ app.delete("/listings/:id",async(req,res,next)=>{
   }
 })
 
+
+
+app.post("/listings/:id/reviews",async(req,res)=>{
+  let listing=await Listing.findById(req.params.id);
+  let newReview=new Review(req.body.review);
+  listing.reviews.push(newReview);
+
+  let res_review=await newReview.save();
+  let res_list=await listing.save();
+
+  console.log(res_review);
+  console.log(res_list);
+
+  res.send("Data Saved Successfully.");
+})
+
 app.all("*",(req,res,next)=>{
   next(new ExpressError(404,"Page Not Found!"));
 })
+
 
 app.use((err,req,res,next)=>{
   let {status=500,message="Something went wrong."}=err;

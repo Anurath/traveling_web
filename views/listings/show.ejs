@@ -30,14 +30,14 @@
     </div>
     <div class="col-8 offset-3 mt-3">
       <h4>Leave a Review</h4>
-      <form action="">
+      <form method="POST" action="/listings/<%= listItem._id %>/reviews">
         <div>
-          <label for="rating">Rating</label>
-          <input type="range" min="1" max="5" name="review[rating]">
+          <label class="form-label " for="rating">Rating</label>
+          <input type="range" min="1" max="5" name="review[rating]" class="form-range mb-3 mt-3">
         </div>
-        <label for="comment">Comment</label>
-        <textarea cols="30" rows="5" name="review[comment]" id="comment"></textarea>
-        <button>Submit</button>
+        <label class="form-label" for="comment">Comment</label>
+        <textarea cols="30" rows="5" name="review[comment]" id="comment" class="form-control mb-3 mt-3"></textarea>
+        <button class="mb-3 mt-3 btn btn-outline-dark">Submit</button>
       </form>
     </div>
 </body>
