@@ -16,7 +16,7 @@ router.get("/",async(req,res)=>{
   })
   
   //new route
-  router.get("//new",(req,res)=>{
+  router.get("/new",(req,res)=>{
     res.render("listings/new.ejs");
   })
   
@@ -48,6 +48,7 @@ router.get("/",async(req,res)=>{
       country:country
     });
     await newlist.save();
+    req.flash("success","New listing added successfully!");
     res.redirect("/listings");
     }catch(err){
       next(new ExpressError(400,"Validation Error"));
@@ -60,6 +61,10 @@ router.get("/",async(req,res)=>{
   router.get("/:id/edit",async(req,res)=>{
     let {id}=req.params;
     const listItem= await Listing.findById(id);
+    if(!listItem){
+      req.flash("error","Listing you requested for does not exist!");
+      res.redirect("/listings");
+    }
     res.render("listings/edit.ejs",{listItem})
   });
   
@@ -90,7 +95,8 @@ router.get("/",async(req,res)=>{
       price:price,
       location:location,
       country:country
-    })
+    });
+    req.flash("success","Listing updated Successfully!");
     res.redirect("/listings");
     }catch(err){
       next(new ExpressError(400,"Please enter the valid data for listing!"));
@@ -103,6 +109,10 @@ router.get("/",async(req,res)=>{
     try{
       let {id}=req.params;
     const listItem= await Listing.findById(id).populate("reviews");
+    if(!listItem){
+      req.flash("error","Listing you requested for does not exist!");
+      res.redirect("/listings");
+    }
     res.render("listings/show.ejs",{listItem});
     }catch(err){
         next(new ExpressError(404,"Ivalid Search!"));
@@ -114,6 +124,7 @@ router.get("/",async(req,res)=>{
     try{
       let {id}=req.params;
     await Listing.findByIdAndDelete(id);
+    req.flash("success","Listing Deleted successfully!");
     res.redirect("/listings");
     }catch(err){
       next(new ExpressError(500,"Intern server error"));
