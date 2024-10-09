@@ -10,6 +10,15 @@
           <a class="nav-link" href="/listings">All Listings</a>
           <a class="nav-link" href="/listings/new">Add New Listing</a>
         </div>
+        <div class="navbar-nav ms-auto"></div>
+         <% if(!currUser){ %>
+          <a class="nav-link ms-3" href="/signup">SignUp</a>
+          <a class="nav-link ms-3" href="/login">Login</a>
+          <% } %>
+            <% if(currUser){ %>
+              <a class="nav-link ms-3" href="/logout">Logout</a>
+              <% } %>
+        </div>
       </div>
     </div>
   </nav>

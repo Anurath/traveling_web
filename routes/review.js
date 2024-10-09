@@ -5,37 +5,15 @@ router.use(express.urlencoded({extended:true}));
 const ExpressError=require("../utils/ExpressError");
 const Listing=require("../models/listing.js");
 const Review=require("../models/reviews.js");
+const {isLoggedIn,isLoggedInReview}=require("../middleware.js");
 
+const reviewController=require("../controller/reviews.js");
 
 //create new reviews route
-router.post("/",async(req,res,next)=>{
-    try{
-      let {id}=req.params;
-      let listing=await Listing.findById(req.params.id);
-      let newReview=await new Review(req.body.review);
-      await listing.reviews.push(newReview);
-  
-    await newReview.save();
-    await listing.save();
-    req.flash("success","Review added successfully!");
-    res.redirect(`/listings/${listing._id}`);
-    }catch(err){
-      next(new ExpressError(400,err));
-    }
-  })
+router.post("/",isLoggedInReview,reviewController.reviewRouteRoute);
   
   //delete reviews route
-  router.delete("/:reviewId",async(req,res,next)=>{
-    try{
-      let {id,reviewId}=req.params;
-    await Listing.findByIdAndUpdate(id,{$pull:{reviews:reviewId}});
-    await Review.findByIdAndDelete(reviewId);
-    req.flash("success","Review deleted successfully!");
-    res.redirect(`/listings/${id}`);
-    }catch(err){
-      next(new ExpressError(400,err));
-    }
-  });
+  router.delete("/:reviewId",isLoggedInReview,reviewController.destroyReviewRoute);
 
   module.exports=router;
   

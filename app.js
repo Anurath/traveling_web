@@ -1,3 +1,7 @@
+if(process.env.NODE_ENV != "production"){
+  require("dotenv").config();
+}
+
 const express = require('express');
 const app = express();
 const port = 3000;
@@ -8,26 +12,45 @@ const ExpressError=require("./utils/ExpressError");
 const Review=require("./models/reviews.js");
 const session=require("express-session");
 const flash=require("connect-flash");
+const passport=require("passport");
+const LocalStrategy=require("passport-local");
+const User=require("./models/user.js");
 
 const sessionObject={
   secret:"mysuperSecreteCode",
   resave:false,
   saveUninitialized:true,
   Cookie:{
-    expires:Date.now()+7*24*60*60*1000,
-    maxAge:7*24*60*60*1000,
+    expires:Date.now()+10000,
+    maxAge:10000,
     httpOnly:true
   }
 }
 app.use(session(sessionObject));
 app.use(flash());
 
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 app.use((req,res,next)=>{
   res.locals.success=req.flash("success");
   res.locals.error=req.flash("error");
+  res.locals.currUser=req.user;
   next();
-})
+});
 
+app.get("/demouser",async(req,res)=>{
+  let fakeUser=new User({
+    email:"anurathwaghmode@gmail.com",
+    username:"anurath",
+  });
+  let registeredUser=await User.register(fakeUser,"helloworld");
+  res.send(registeredUser);
+})
 
 
 app.set("view engine","ejs");
@@ -37,11 +60,15 @@ app.use(methodOverride("_method"));
 app.engine('ejs',ejsMate);
 app.use(express.static(path.join(__dirname,"/public")));
 
-const listings=require("./routes/listing.js");
-app.use("/listings",listings);
+const listingsRouter=require("./routes/listing.js");
+app.use("/listings",listingsRouter);
 
-const reviews=require("./routes/review.js");
-app.use("/listings/:id/reviews",reviews);
+const reviewsRouter=require("./routes/review.js");
+app.use("/listings/:id/reviews",reviewsRouter);
+
+const userRouter=require("./routes/user.js");
+app.use("/",userRouter)
+
 
 const mongoose = require('mongoose');
 const Listing=require("./models/listing.js");
@@ -67,7 +94,7 @@ app.get("/",(req,res)=>{
 
 
 app.all("*",(req,res,next)=>{
-  next(new ExpressError(404,"Page Not Found!"));
+  next(new ExpressError(404,"You can try refreshing... or buy some popcorn and wait!"));
 })
 
 
@@ -79,12 +106,5 @@ app.use((err,req,res,next)=>{
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
 });
-
-
-
-
-
-
-
 
 //if error occure in future then remove if statments from the above apis

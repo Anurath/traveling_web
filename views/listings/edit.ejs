@@ -3,7 +3,7 @@
     <div class="row  mt-3">
         <div class="col-8 offset-2">
             <h3>Edit Your Listings</h3>
-    <form method="POST", action="/listings/<%= listItem._id %>?_method=PUT" novalidate class="needs-validation">
+    <form method="POST", action="/listings/<%= listItem._id %>?_method=PUT" novalidate class="needs-validation" enctype="multipart/form-data">
         <div class="mb-3">
             <label for="title" class="form-label">Title</label>
             <input required class="form-control" type="text" name="title" value="<%= listItem.title %>">
@@ -12,33 +12,37 @@
         </div>
        
         <div class="mb-3">
-            <label for="description" class="form-label">Title</label>
+            <label for="description" class="form-label">Description</label>
             <textarea required class="form-control" name="description" ><%= listItem.description %></textarea>
             <div class="invalid-feedback">Description is mandetory</div>
         </div>
+
+        <div class="">
+            Original Image :
+            <br>
+            <img src="<%= listItem.image.url %>" alt="" class="img-fluid" style="max-width: 250px; height: auto; border-radius:10px;">
+        </div>        
         
         <div class="mb-3">
-            <label for="image" class="form-label">Title</label>
-            <input required class="form-control" type="text" name="image" value="<%= listItem.image %>">
-            <div class="invalid-feedback">Please enter valid image link</div>
-            
+            <label for="image" class="form-label">Image</label>
+            <input class="form-control" type="file" name="image">
         </div>
 
         <div class="row">
             <div class="mb-3 col-md-4">
-                <label for="price" class="form-label">Title</label>
+                <label for="price" class="form-label">Price</label>
                 <input required class="form-control" type="number" name="price" value="<%= listItem.price %>">
                 <div class="invalid-feedback">Please enter valid price</div>
             </div>
             <div class="mb-3 col-md-8">
-                <label for="country" class="form-label">Title</label>
+                <label for="country" class="form-label">Country</label>
                 <input required class="form-control" type="text" name="country" value="<%= listItem.country %>">
                 <div class="invalid-feedback">Please enter the country name</div>
             </div>
         </div>
 
         <div>
-            <label for="location" class="form-label">Title</label>
+            <label for="location" class="form-label">Location</label>
             <input required class="form-control" type="text" name="location" value="<%= listItem.location %>">
             <div class="invalid-feedback">Location shoud be valid</div>
         </div>
