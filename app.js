@@ -11,12 +11,29 @@ const ejsMate=require("ejs-mate");
 const ExpressError=require("./utils/ExpressError");
 const Review=require("./models/reviews.js");
 const session=require("express-session");
+const MongoStore = require('connect-mongo');
 const flash=require("connect-flash");
 const passport=require("passport");
 const LocalStrategy=require("passport-local");
 const User=require("./models/user.js");
+const dbUrl='mongodb+srv://waghmodeanurath:gt1C1YWAtniD8sR9@cluster0.tgcwa.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+
+
+const store=MongoStore.create({
+  mongoUrl:dbUrl,
+  crypto:{
+    secret:process.env.SECRET
+  },
+  touchAfter:24*3600,
+});
+
+store.on("error",()=>{
+  console.log("ERROR IN MONGO SESSION STORE!");
+})
+
 
 const sessionObject={
+  store,
   secret:"mysuperSecreteCode",
   resave:false,
   saveUninitialized:true,
@@ -26,6 +43,10 @@ const sessionObject={
     httpOnly:true
   }
 }
+
+
+
+
 app.use(session(sessionObject));
 app.use(flash());
 
@@ -70,6 +91,7 @@ const userRouter=require("./routes/user.js");
 app.use("/",userRouter)
 
 
+
 const mongoose = require('mongoose');
 const Listing=require("./models/listing.js");
 const { nextTick } = require('process');
@@ -80,17 +102,48 @@ main().then((res)=>{
 .catch(err => console.log(err));
 
 async function main() {
-  await mongoose.connect('mongodb://127.0.0.1:27017/wonderlust');
+  await mongoose.connect(dbUrl,{
+    serverSelectionTimeoutMS: 5000, // Timeout after 5 seconds if cannot connect
+    socketTimeoutMS: 45000,         // Timeout after 45 seconds for socket operations
+  });
 }
 
 
 app.get("/",(req,res)=>{
-  res.send("Hi I am root.");
+  res.redirect("/listings");
 })
 
+app.get("/searchlist",async(req,res,next)=>{
+    try{
+      let {search,select}=req.query;
+    if(select){
+      let listings = await Listing.find({ country:select});
+      if(listings.length<=0){
+        req.flash("error", "Match not found please try again!");
+        return  res.redirect("/listings");
+      }
+      return res.render("listings/search.ejs",{listings});
+    }
+    else if(search){
+      console.log(search);
+      let lowercase=search.toLowerCase();
+      let newSearchStr=lowercase.charAt(0).toUpperCase() + lowercase.slice(1)
+      let listings = await Listing.find({location:newSearchStr});
+      if(listings.length<=0){
+        req.flash("error", "Match not found please try again!");
+        return  res.redirect("/listings");
+      }
+      return res.render("listings/search.ejs",{listings});
+    }
+    else{
+      req.flash("error", "Match not found please try again!");
+      return res.redirect("/listings");
+    }
+    }catch(err){
+      next(new ExpressError(400,"Something went wrong!"));
+    }
 
-
-
+});
 
 
 app.all("*",(req,res,next)=>{

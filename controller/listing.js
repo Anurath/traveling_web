@@ -118,7 +118,6 @@ module.exports.createListing=async(req,res,next)=>{
       res.redirect("/listings");
       
     } catch (err) {
-      // Handle different types of errors specifically
       if (err instanceof ExpressError) {
         next(err);
       } else {
@@ -163,3 +162,4 @@ module.exports.destroyRoute= async(req,res,next)=>{
       next(new ExpressError(500,"Intern server error"));
     }
   };
+

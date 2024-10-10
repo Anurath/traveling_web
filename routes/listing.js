@@ -43,4 +43,5 @@ router.get("/",listingController.index)
   //delete route
   router.delete("/:id",isLoggedIn,listingController.destroyRoute)
 
+
   module.exports=router;
